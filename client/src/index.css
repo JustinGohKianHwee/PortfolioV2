@@ -1,0 +1,85 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  /* your primary accent color */
+  --color-accent: #601EF9;
+
+  /* background/card surfaces */
+  --color-card: #1a1a1c;
+
+  --color-ring: #601EF9;
+}
+
+/* 1) Poppins Regular (400) */
+@font-face {
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 400;
+  src: url("/Poppins/Poppins-Regular.ttf") format("truetype");
+}
+
+/* 2) Poppins SemiBold (600) */
+@font-face {
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 600;
+  src: url("/Poppins/Poppins-SemiBold.ttf") format("truetype");
+}
+
+/* 3) Poppins Bold (700) */
+@font-face {
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 700;
+  src: url("/Poppins/Poppins-Bold.ttf") format("truetype");
+}
+
+@layer utilities {
+  /* your background utility */
+  .bg-background {
+    background-image: url('/home-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-color: rgba(0, 0, 0, 0.6);
+    background-blend-mode: overlay;
+  }
+
+  /* Poppins utilities */
+  .font-poppins-regular {
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+  }
+  .font-poppins-semibold {
+    font-family: "Poppins", sans-serif;
+    font-weight: 600;
+  }
+  .font-poppins-bold {
+    font-family: "Poppins", sans-serif;
+    font-weight: 700;
+  }
+  .text-gradient {
+    @apply bg-gradient-to-r from-purple-800 via-indigo-700 to-blue-900
+           bg-clip-text text-transparent;
+  }
+  .bg-gradient {
+    @apply bg-gradient-to-r from-purple-800 via-indigo-700 to-blue-900;
+  }
+  .hover-gradient-text {
+    @apply group-hover:text-transparent
+           group-hover:bg-gradient-to-r
+           group-hover:from-purple-800
+           group-hover:via-indigo-700
+           group-hover:to-blue-900
+           group-hover:bg-clip-text;
+  }
+}
+
+
+html {
+  scroll-behavior: smooth;
+}
+

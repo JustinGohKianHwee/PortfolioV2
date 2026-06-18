@@ -1,0 +1,13 @@
+// client/tsconfig.json
+{
+  "compilerOptions": {
+    "allowJs": true,          /* pick up .js/.jsx */
+    "checkJs": false,         /* don’t enforce TS checks */
+    "jsx": "react-jsx",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
+  },
+  "include": ["src"]
+}
