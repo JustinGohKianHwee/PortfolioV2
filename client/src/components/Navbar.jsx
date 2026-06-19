@@ -1,113 +1,109 @@
-// src/components/Navbar.jsx
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
-import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetHeader } from "@/components/ui/sheet"
-import { CiMenuFries } from "react-icons/ci"
+import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetHeader } from "@/components/ui/sheet";
+import { Menu } from "lucide-react";
 
 const navItems = [
-  { name: "Home",        href: "/#hero"        },
-  { name: "Skills",      href: "/#skills"      },
-  { name: "Experiences", href: "/#experiences" },
-  { name: "Education",   href: "/#education"   },
-  { name: "Projects",    href: "/#projects"    },
-  { name: "Why me?",     href: "/#whyme"   },
-  { name: "Contact",     href: "/#contact"     },
+  { name: "Work",     href: "#work"     },
+  { name: "Projects", href: "#projects" },
+  { name: "Why Me",   href: "#whyme"    },
+  { name: "Contact",  href: "#contact"  },
 ];
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setIsScrolled(window.scrollY > 10);
-    window.addEventListener("scroll", onScroll);
+    const onScroll = () => setIsScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   return (
     <nav
       className={cn(
-        "fixed top-0 left-0 w-full z-50 transition-all duration-300 sticky",
+        "fixed top-0 left-0 w-full z-50 transition-all duration-300",
         isScrolled
-          ? "py-2 bg-black/60 backdrop-blur-md shadow-md"
-          : "py-4 bg-transparent"
+          ? "py-3 bg-black/80 backdrop-blur-xl border-b border-white/[0.06]"
+          : "py-5 bg-transparent"
       )}
     >
-      <div className="container mx-auto flex items-center px-8">
-        
-        {/* 1) Logo on the left */}
-        <div className="flex-shrink-0">
-          <a href="#hero">
-            <span className="text-gradient text-3xl font-poppins-bold">
-              Justin.
-            </span>
-          </a>
-        </div>
+      <div className="section-container flex items-center justify-between">
 
-        {/* 2) Nav links centered */}
-        <div className="flex-1 hidden md:flex justify-center items-center">
-          <ul className="flex justify-center space-x-12 text-white/80">
-            {navItems.map((item) => (
-              <li key={item.href}>
+        <a
+          href="#hero"
+          className="text-xl font-bold text-white tracking-tight hover:opacity-70 transition-opacity duration-150"
+        >
+          Justin<span className="gradient-text">.</span>
+        </a>
+
+        <ul className="hidden md:flex items-center gap-8">
+          {navItems.map((item) => (
+            <li key={item.href}>
+              <a
+                href={item.href}
+                className="text-sm font-medium text-white/50 hover:text-white transition-colors duration-150"
+              >
+                {item.name}
+              </a>
+            </li>
+          ))}
+        </ul>
+
+        <a href="#contact" className="hidden md:inline-flex gradient-cta-btn">
+          Get in touch
+        </a>
+
+        <div className="md:hidden">
+          <Sheet open={open} onOpenChange={setOpen}>
+            <SheetTrigger asChild>
+              <button
+                aria-label="Open navigation menu"
+                className="p-2 text-white/50 hover:text-white transition-colors"
+              >
+                <Menu size={22} />
+              </button>
+            </SheetTrigger>
+            <SheetContent
+              side="right"
+              className="bg-[#0A0A0A] border-l border-white/[0.06] w-72 flex flex-col"
+            >
+              <SheetHeader>
+                <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
+              </SheetHeader>
+
+              <div className="mt-12 mb-10">
+                <span className="text-2xl font-bold text-white tracking-tight">
+                  Justin<span className="gradient-text">.</span>
+                </span>
+              </div>
+
+              <nav className="flex flex-col gap-1">
+                {navItems.map((item) => (
+                  <a
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setOpen(false)}
+                    className="px-2 py-3.5 text-base text-white/50 hover:text-white transition-colors border-b border-white/[0.05] last:border-0"
+                  >
+                    {item.name}
+                  </a>
+                ))}
+              </nav>
+
+              <div className="mt-auto pb-8">
                 <a
-                  href={item.href}
-                  className="group relative px-1 py-2 font-poppins-semibold uppercase"
+                  href="#contact"
+                  onClick={() => setOpen(false)}
+                  className="btn-primary w-full justify-center"
                 >
-                  {item.name}
-                  <span
-                    className="
-                      absolute bottom-0 left-0 h-[2px] w-full
-                      bg-gradient-to-r from-purple-800 via-indigo-700 to-blue-900
-                      transform origin-center scale-x-0
-                      group-hover:scale-x-100
-                      transition-transform duration-300
-                    "
-                  />
+                  Get in touch
                 </a>
-              </li>
-            ))}
-          </ul>
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
-        <div className="md:hidden ml-auto">
-            <Sheet>
-                <SheetTrigger className= "flex justify-center items-center">
-                    <CiMenuFries className= "text-[32px] text-accent"/>
-                </SheetTrigger>
-                <SheetContent className = "flex flex-col">
-                    <SheetHeader>
-                        <SheetTitle className="sr-only"> Navigation Menu  </SheetTitle>
-                    </SheetHeader>
-                    <div className="mt-24 mb-12 text-center text-2xl">
-                        <a href="#hero">
-                            <span className="bg-gradient-to-r from-purple-800 via-indigo-700 to-blue-900 bg-clip-text text-transparent text-3xl font-poppins-bold">
-                            Justin.
-                            </span>
-                        </a>
-                    </div>
-                    <nav className="flex flex-col justify-center items-center gap-5 text-white/80">
-                        {navItems.map((item) => (
-                            <a
-                                key={item.href}
-                                href={item.href}
-                                className="group relative px-1 py-2 font-poppins-semibold uppercase"
-                            >
-                                {item.name}
-                            <span
-                                className="
-                                    absolute bottom-0 left-0 h-[2px] w-full
-                                    bg-gradient-to-r from-purple-800 via-indigo-700 to-blue-900
-                                    transform origin-center scale-x-0
-                                    group-hover:scale-x-100
-                                    transition-transform duration-300
-                                "
-                                />
-                            </a>
-                            ))}
-                    </nav>
-                </SheetContent>
-            </Sheet>
-        </div>
-
-        
       </div>
     </nav>
   );

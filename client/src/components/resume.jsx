@@ -1,310 +1,84 @@
-"use client"
-import Photostatic from "@/components/photostatic"
-import {
-    FaHtml5,
-    FaCss3,
-    FaPython,
-    FaJava,
-    FaJs,
-    FaReact,
-    FaDocker,
-    FaNodeJs
-} from "react-icons/fa"
-
-import { 
-    SiUipath,
-    SiNextdotjs,
-    SiPytorch,
-    SiTensorflow,
-    SiOpenai,
-    SiLangchain,
-    SiHuggingface,
-    SiRstudioide,
-    SiMysql
- } from "react-icons/si";
-
-import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
-
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger
-  } from "@/components/ui/tooltip";
-
 import { motion } from "framer-motion";
+import { skillGroups } from "@/data/skills";
+import { meta } from "@/data/meta";
 
-const about = {
-    title: "About Me",
-    description: "I’m a Machine Learning Engineer with a passion for turning data into impactful, real-world solutions. Over the years I’ve built and deployed end-to-end ML pipelines, from data collection and feature engineering to model training, evaluation, and production monitoring.",
-    description2: "If you’re looking for someone to drive your next AI or software initiative—be it prototyping a proof-of-concept or scaling production systems—let’s connect! Feel free to reach out to explore opportunities or discuss how we might work together.",
-    info: [
-        {
-            fieldName: "Name",
-            fieldValue: "Goh Kian Hwee Justin",
-        },
-        {
-            fieldName: "Phone",
-            fieldValue: "+65 8290 9567",
-        },
-        {
-            fieldName: "Email",
-            fieldValue: "gohkhjustin@gmail.com",
-        },
-        {
-            fieldName: "Nationality",
-            fieldValue: "Singapore Citizen",
-        },
-        {
-            fieldName: "Languages",
-            fieldValue: "English, Mandarin",
-        }
-    ]
-}
+const fadeUp = (delay = 0) => ({
+  initial: { opacity: 0, y: 20 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, margin: "-60px" },
+  transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1], delay },
+});
 
-const technologies = {
-    title: "Tech Stack",
-    description: "Technologies that I am proficient in",
-    techList: [
-        {
-            icon: <SiPytorch />,
-            name: "Pytorch"
-        },
-        {
-            icon: <SiTensorflow />,
-            name: "Tensorflow"
-        },
-        {
-            icon: <SiOpenai />,
-            name: "OpenAI"
-        },
-        {
-            icon: <SiLangchain />,
-            name: "LangChain"
-        },
-        {
-            icon: <SiHuggingface />,
-            name: "HuggingFace"
-        },
-        {
-            icon: <SiRstudioide />,
-            name: "R Studio"
-        },
-        {
-            icon: <SiMysql />,
-            name: "MySQL"
-        },
-        {
-            icon: <SiUipath />,
-            name: "UiPath"
-        },
-        {
-            icon: <FaDocker />,
-            name: "Docker"
-        },
-        {
-            icon: <FaReact />,
-            name: "React"
-        },
-        {
-            icon: <FaNodeJs />,
-            name: "NodeJs"
-        },
-        {
-            icon: <SiNextdotjs />,
-            name: "Next.js"
-        },
-        
-    ]
-}
+const stats = [
+  { value: "4.81", label: "GPA (NUS)" },
+  { value: "3+", label: "Years industry experience" },
+  { value: "5", label: "Companies" },
+  { value: "2", label: "ML specialisations" },
+];
 
-const languages = {
-    title: "Languages",
-    description: "Coding languages that I am proficient in",
-    langList: [
-        {
-            icon: <FaPython />,
-            name: "Python"
-        },
-        {
-            icon: <FaJava />,
-            name: "Java"
-        },
-        {
-            icon: <FaJs />,
-            name: "Javascript"
-        },
-        {
-            icon: <FaHtml5 />,
-            name: "html 5"
-        },
-        {
-            icon: <FaCss3 />,
-            name: "Css 3"
-        },
-        {
-            icon: <SiRstudioide />,
-            name: "R"
-        },
-        {
-            icon: <SiMysql />,
-            name: "SQL"
-        },
-        
-    ]
-}
-const skills = {
-  title: "Skills",
-  description: "Core professional skills I bring to every project",
-  skillList: [
-    "Deep Learning",
-    "Machine Learning",
-    "Clustering",
-    "Data Science",
-    "LLMs",
-    "Prompt Engineering",
-    "Problem Solving",
-    "Communication",
-    "Team Leadership",
-    "Agile/Scrum",
-    "Data Visualization",
-    "Unit Testing",
-    "CI/CD",
-    "Version Control (Git)",
-  ],
-};
+export default function Skills() {
+  return (
+    <section id="skills" className="py-24">
+      <div className="section-container">
 
-const Resume = () => {
-    return (
-        <motion.section
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 1.5, ease: "easeIn" }}
-            className="min-h-screen flex items-center justify-center py-12 xl:py-0"
-            >
-            <div className="container mx-auto px-4 sm:px-6">
-                <Tabs
-                    defaultValue="About Me"
-                    className="flex flex-col xl:flex-row gap-[60px]"
-                >
-                    <TabsList className="flex flex-col w-full max-w-[380px] mx-auto xl:mx-0 gap-6">
-                        <TabsTrigger value="About Me" className="text-white font-poppins-regular">About Me</TabsTrigger>
-                        <TabsTrigger value="Languages" className="text-white font-poppins-regular">Languages</TabsTrigger>
-                        <TabsTrigger value="Tech Stack" className="text-white font-poppins-regular">Tech Stack</TabsTrigger>
-                        <TabsTrigger value="Skills" className="text-white font-poppins-regular">Skills</TabsTrigger>
-                    </TabsList>
-                    <div className="min-h-[100vh] w-full pb-8 px-4">
-                        <TabsContent value="About Me" className="w-full">
-                            <div className="flex flex-col gap-[30px]">
-                                <h3 className="text-4xl text-gradient leading-snug font-poppins-semibold text-center xl:text-left">
-                                    {about.title}
-                                </h3>
-                                <p className="max-w-[900px] text-white/60 mx-auto xl:mx-0 font-poppins-regular">{about.description}  </p>
-                                <p className="max-w-[900px] text-white/60 mx-auto xl:mx-0 font-poppins-regular">{about.description2}  </p>
-                                <ul className="grid grid-cols-1 xl:grid-cols-2 gap-y-6 max-w-[800px] mx-auto xl:mx-0">
-                                    {about.info.map((item,index) => {
-                                        return <li key={index} className="flex items-center justify-center xl:justify-start gap-4">
-                                            <span className="text-white/60">{item.fieldName}:</span>
-                                            <span className="text-xl text-white font-poppins-semibold">{item.fieldValue}</span>
-                                        </li>
-                                    })}
-                                </ul>
-                            </div>
-                        </TabsContent>
-                        <TabsContent value="Languages" className="w-full">
-                            <div className="flex flex-col gap-[30px]">
-                                <div className="flex flex-col gap-[30px] text-center xl:text-left">
-                                    <h3 className="text-4xl text-white font-poppins-semibold text-gradient leading-snug">
-                                        {languages.title}
-                                    </h3>
-                                    <p className="max-w-[600px] text-white/60 mx-auto xl:mx-0 font-poppins-regular">
-                                        {languages.description}
-                                    </p>
-                                </div>
-                                <ul className="grid grid-cols-3 md:grid-cols-4 gap-6 xl:gap-[30px]">
-                                    {languages.langList.map((lang,index) => {
-                                        return <li key={index}>
-                                            <TooltipProvider delayDuration={100}>
-                                                <Tooltip>
-                                                    <TooltipTrigger className="w-full h-[150px] bg-card rounded-xl flex justify-center items-center group">
-                                                        <div className="text-6xl group-hover:text-accent transition-all duration-300 text-white/80" >
-                                                            {lang.icon}
-                                                        </div>
-                                                    </TooltipTrigger>
-                                                    <TooltipContent>
-                                                        <p className="capitalize">{lang.name}</p>
-                                                    </TooltipContent>
-                                                </Tooltip>
-                                            </TooltipProvider>
-                                        </li>
-                                    })}
-                                </ul>
-                            </div>
-                        </TabsContent>
-                        <TabsContent value="Tech Stack" className="w-full">
-                            <div className="flex flex-col gap-[30px]">
-                                <div className="flex flex-col gap-[30px] text-center xl:text-left">
-                                    <h3 className="text-4xl text-gradient leading-snug font-poppins-semibold">
-                                        {technologies.title}
-                                    </h3>
-                                    <p className="max-w-[600px] text-white/60 mx-auto xl:mx-0 font-poppins-regular">
-                                        {technologies.description}
-                                    </p>
-                                </div>
-                                <ul className="grid grid-cols-3 md:grid-cols-4 gap-6 xl:gap-[30px]">
-                                    {technologies.techList.map((tech,index) => {
-                                        return <li key={index}>
-                                            <TooltipProvider delayDuration={100}>
-                                                <Tooltip>
-                                                    <TooltipTrigger className="w-full h-[150px] bg-card rounded-xl flex justify-center items-center group">
-                                                        <div className="text-6xl group-hover:text-accent transition-all duration-300 text-white/80">
-                                                            {tech.icon}
-                                                        </div>
-                                                    </TooltipTrigger>
-                                                    <TooltipContent>
-                                                        <p className="capitalize">{tech.name}</p>
-                                                    </TooltipContent>
-                                                </Tooltip>
-                                            </TooltipProvider>
-                                        </li>
-                                    })}
-                                </ul>
-                            </div>
-                        </TabsContent>
-                        <TabsContent value="Skills" className="w-full">
-                            <div className="flex flex-col gap-[30px]">
-                                <div className="flex flex-col gap-[30px] text-center xl:text-left">
-                                <h3 className="text-4xl text-gradient leading-snug font-poppins-semibold">{skills.title}</h3>
-                                <p className="max-w-[600px] text-white/60 mx-auto xl:mx-0 font-poppins-regular">
-                                    {skills.description}
-                                </p>
-                                </div>
+        {/* Section header */}
+        <motion.div {...fadeUp(0)} className="mb-12">
+          <p className="label-mono mb-3">About</p>
+          <h2
+            className="text-3xl xl:text-4xl text-[#FAFAF9] mb-4"
+            style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700 }}
+          >
+            ML Engineer. Builder. Researcher.
+          </h2>
+          <p className="text-[#A1A1A1] max-w-2xl text-base leading-relaxed">
+            {meta.bio} Studying {meta.degree} at {meta.university} with a double
+            specialisation in {meta.specialisation}, and a Minor in Quantitative Finance.
+          </p>
+        </motion.div>
 
-                                <ul className="grid grid-cols-3 gap-6 gap-[30px]">
-                                {skills.skillList.map((skill, idx) => (
-                                    <li key={idx}>
-                                    <div className="group w-full h-[100px] bg-card rounded-xl flex justify-center items-center text-center">
-                                        <span className="
-                                                inline-block
-                                                sm:text-xl text-white/80
-                                                font-poppins-semibold
-                                                transition duration-300
-                                                hover-gradient-text
-                                            ">{skill}</span>
-                                    </div>
-                                    </li>
-                                ))}
-                                </ul>
-                            </div>
-                            </TabsContent>
-
-                    </div>
-                </Tabs>
-
+        {/* Stats row */}
+        <motion.div
+          {...fadeUp(0.1)}
+          className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-14"
+        >
+          {stats.map((s) => (
+            <div key={s.label} className="card-base p-5">
+              <div
+                className="text-3xl text-[#E8A04D] mb-1"
+                style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800 }}
+              >
+                {s.value}
+              </div>
+              <div className="text-sm text-[#6B6B6B]">{s.label}</div>
             </div>
-        </motion.section>
-    )
-}
+          ))}
+        </motion.div>
 
-export default Resume
+        {/* Skill groups */}
+        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+          {skillGroups.map((group, gi) => (
+            <motion.div
+              key={group.category}
+              {...fadeUp(0.05 * gi)}
+              className="card-base p-6"
+            >
+              <h3
+                className="text-sm text-[#FAFAF9] mb-4"
+                style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600 }}
+              >
+                {group.category}
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                {group.skills.map((skill) => (
+                  <span key={skill} className="badge-tech">
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}

@@ -10,5 +10,18 @@ export default defineConfig({
     alias: {
       "@": path.resolve(__dirname,"./src")
     }
-  }
+  },
+  server: {
+    port: process.env.PORT ? parseInt(process.env.PORT) : 5173,
+    strictPort: false,
+  },
+  test: {
+    environment: "jsdom",
+    globals: true,
+    setupFiles: ["./src/test/setup.js"],
+    css: false,
+    env: {
+      VITE_API_BASE_URL: "http://localhost:5000",
+    },
+  },
 })

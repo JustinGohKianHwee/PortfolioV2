@@ -1,147 +1,204 @@
-import React, { useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { FaPhoneAlt, FaEnvelope } from "react-icons/fa";
+import { useState } from "react";
 import { motion } from "framer-motion";
+import { ArrowUpRight, Send } from "lucide-react";
+import { meta } from "@/data/meta";
 
-const info = [
-  {
-    icon: <FaPhoneAlt />, title: "Phone", desc: "+65 82909567"
-  },
-  {
-    icon: <FaEnvelope />, title: "Email", desc: "gohkhjustin@gmail.com"
-  },
-];
+const EASE = [0.32, 0.72, 0, 1];
+const STATUS = { idle: "idle", sending: "sending", ok: "ok", error: "error" };
 
-const MAX_CHARS = 2000
+const blurReveal = (delay = 0) => ({
+  initial: { opacity: 0, filter: "blur(12px)" },
+  whileInView: { opacity: 1, filter: "blur(0px)" },
+  viewport: { once: true, margin: "-60px" },
+  transition: { duration: 0.7, ease: EASE, delay },
+});
+
+const inputCls =
+  "w-full bg-[#0F0F0F] border border-white/[0.08] rounded-lg px-4 py-3 text-sm text-white placeholder-white/25 focus:outline-none focus:border-[#6366F1]/50 focus:ring-1 focus:ring-[#6366F1]/20 transition-all min-h-[44px]";
 
 export default function Contact() {
-  const [status, setStatus] = useState("");
-  const accessKey = import.meta.env.VITE_WEB3FORMS_KEY;
+  const [open, setOpen] = useState(false);
+  const [form, setForm] = useState({ name: "", email: "", message: "" });
+  const [status, setStatus] = useState(STATUS.idle);
+
+  const handleChange = (e) =>
+    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setStatus("loading");
-
-    const formData = new FormData(e.target);
-    formData.append("access_key", accessKey);
-    const payload = JSON.stringify(Object.fromEntries(formData));
-
+    setStatus(STATUS.sending);
     try {
       const res = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: payload,
+        body: JSON.stringify({
+          access_key: import.meta.env.VITE_WEB3FORMS_KEY,
+          name: form.name,
+          email: form.email,
+          message: form.message,
+          subject: `Portfolio contact from ${form.name}`,
+        }),
       });
-      const data = await res.json();
-      if (data.success) {
-        setStatus("success");
-        e.target.reset();
+      if (res.ok) {
+        setStatus(STATUS.ok);
+        setForm({ name: "", email: "", message: "" });
       } else {
-        console.error("Web3Forms error:", data);
-        setStatus("error");
+        setStatus(STATUS.error);
       }
-    } catch (err) {
-      console.error("Submission error:", err);
-      setStatus("error");
+    } catch {
+      setStatus(STATUS.error);
     }
   };
 
   return (
-    <motion.section
-      initial={{ opacity: 0 }}
-      animate={{
-        opacity: 1,
-        transition: { duration: 1.5, ease: "easeIn" },
-      }}
-      className="py-6"
-    >
-      <div className="container mx-auto px-4 sm:px-6 mt-20">
-        <div className="flex flex-col xl:flex-row gap-[30px]">
-          <div className="xl:w-[54%] order-2 xl:order-none">
-            <form
-              onSubmit={handleSubmit}
-              className="flex flex-col gap-6 p-10 bg-[#1f1f1f]/60 rounded-xl"
-            >
-              <h3 className="text-5xl text-gradient font-poppins-bold leading-snug">Let&apos;s Work Together!</h3>
-              <p className="text-white/60 font-poppins-regular">
-                Whether you have a specific project in mind, or just want to say hello,
-                don’t hesitate to reach out! Drop me a message and I’ll get back to you
-                as soon as I can.
-              </p>
+    <section id="contact" className="py-24 bg-[#050505]">
+      <div className="section-container">
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <Input
-                  name="firstname"
-                  type="text"
-                  placeholder="Firstname"
+        {/* ── Headline ── */}
+        <motion.div {...blurReveal(0)} className="mb-14">
+          <h2
+            className="text-white leading-none mb-10"
+            style={{
+              fontSize: "clamp(56px, 9vw, 100px)",
+              fontWeight: 800,
+              letterSpacing: "-0.04em",
+            }}
+          >
+            Let's{" "}
+            <br className="sm:hidden" />
+            talk<span className="gradient-text">.</span>
+          </h2>
+
+          <div className="flex flex-wrap gap-5 items-center">
+            <a
+              href={`mailto:${meta.email}`}
+              className="inline-flex items-center gap-2 text-white text-base font-medium hover:text-white/70 transition-colors"
+            >
+              {meta.email} <ArrowUpRight size={16} />
+            </a>
+            <span className="text-white/15">·</span>
+            <a
+              href={meta.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-white/40 hover:text-white transition-colors text-sm font-medium"
+            >
+              LinkedIn <ArrowUpRight size={14} />
+            </a>
+            <a
+              href={meta.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-white/40 hover:text-white transition-colors text-sm font-medium"
+            >
+              GitHub <ArrowUpRight size={14} />
+            </a>
+          </div>
+        </motion.div>
+
+        {/* ── Inline contact form ── */}
+        <motion.div {...blurReveal(0.15)}>
+          {!open ? (
+            <button
+              onClick={() => setOpen(true)}
+              className="inline-flex items-center gap-2 text-white/40 text-sm hover:text-white transition-colors border border-white/[0.08] rounded-lg px-5 py-3 hover:border-white/[0.18] min-h-[44px]"
+            >
+              <Send size={14} />
+              Send a message
+            </button>
+          ) : (
+            <motion.form
+              initial={{ opacity: 0, filter: "blur(8px)" }}
+              animate={{ opacity: 1, filter: "blur(0px)" }}
+              transition={{ duration: 0.4, ease: EASE }}
+              onSubmit={handleSubmit}
+              className="max-w-lg flex flex-col gap-4"
+            >
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div>
+                  <label htmlFor="c-name" className="label-meta mb-2 block">Name *</label>
+                  <input
+                    id="c-name"
+                    name="name"
+                    type="text"
+                    required
+                    autoComplete="name"
+                    value={form.name}
+                    onChange={handleChange}
+                    placeholder="Your name"
+                    className={inputCls}
+                  />
+                </div>
+                <div>
+                  <label htmlFor="c-email" className="label-meta mb-2 block">Email *</label>
+                  <input
+                    id="c-email"
+                    name="email"
+                    type="email"
+                    required
+                    autoComplete="email"
+                    value={form.email}
+                    onChange={handleChange}
+                    placeholder="you@email.com"
+                    className={inputCls}
+                  />
+                </div>
+              </div>
+              <div>
+                <label htmlFor="c-message" className="label-meta mb-2 block">Message *</label>
+                <textarea
+                  id="c-message"
+                  name="message"
+                  rows={5}
                   required
-                />
-                <Input
-                  name="lastname"
-                  type="text"
-                  placeholder="Lastname"
-                  required
-                />
-                <Input
-                  name="email"
-                  type="email"
-                  placeholder="Email Address"
-                  required
-                />
-                <Input
-                  name="phone"
-                  type="tel"
-                  placeholder="Phone Number"
-                  required
+                  value={form.message}
+                  onChange={handleChange}
+                  placeholder="Tell me about the role or opportunity…"
+                  className={`${inputCls} resize-none leading-relaxed min-h-0`}
                 />
               </div>
 
-              <Textarea
-                name="message"
-                placeholder="Type your message here"
-                rows={6}
-                maxLength={MAX_CHARS}
-                required
-                className="h-[200px] border-white/10 font-poppins-regular text-white/80 placeholder:text-white/60 focus-visible:outline-none focus-visible-ring-1 focus-visible:ring-accent focus-visible:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50"
-              />
+              <div className="flex gap-3 items-center">
+                <button
+                  type="submit"
+                  disabled={status === STATUS.sending || status === STATUS.ok}
+                  className="btn-primary disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  {status === STATUS.sending
+                    ? "Sending…"
+                    : status === STATUS.ok
+                    ? "Sent!"
+                    : "Send message"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setOpen(false)}
+                  className="btn-ghost"
+                >
+                  Cancel
+                </button>
+              </div>
 
-              <button
-                type="submit"
-                disabled={status === "loading"}
-                className="max-w-40 bg-accent text-white px-4 py-2 rounded disabled:opacity-50"
-              >
-                {status === "loading" ? "Sending..." : "Send Message"}
-              </button>
-
-              {status === "success" && (
-                <p className="text-gradient font-poppins-semibold">Message sent successfully!</p>
+              {status === STATUS.error && (
+                <p className="text-red-400 text-sm">
+                  Something went wrong — try emailing me directly.
+                </p>
               )}
-              {status === "error" && (
-                <p className="text-red-500/80 font-poppins-semibold">Failed to send. Please try again.</p>
-              )}
-            </form>
-          </div>
+            </motion.form>
+          )}
+        </motion.div>
 
-          <div className="flex-1 flex items-center xl:justify-end order-1 xl:order-none mb-8 xl:mb-0">
-            <ul className="flex flex-col gap-10">
-              {info.map((item, idx) => (
-                <li key={idx} className="flex items-center gap-6">
-                  <div
-                    className="w-[72px] h-[72px] xl:w-[104px] xl:h-[104px] bg-[#27272c] text-accent rounded-md flex items-center justify-center text-2xl"
-                  >
-                    {item.icon}
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-gradient text-xl font-poppins-semibold">{item.title}</p>
-                    <h3 className="text-2xl text-white">{item.desc}</h3>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
+        {/* ── Footer ── */}
+        <motion.div
+          {...blurReveal(0.2)}
+          className="mt-20 pt-8 border-t border-white/[0.06] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"
+        >
+          <p className="text-white/25 text-xs">
+            NUS B.Sc. Business Analytics (Hons) · GPA {meta.gpa} · Singapore
+          </p>
+          <p className="text-white/25 text-xs">© 2026 Justin Goh</p>
+        </motion.div>
       </div>
-    </motion.section>
+    </section>
   );
 }
