@@ -1,12 +1,11 @@
 # backend/routes/whyme.py
 import os
 import csv
+import json
 from datetime import datetime, timezone
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, Response, stream_with_context
 from lib.vectorstore.resumestore import get_resume_store
 from langchain_openai import ChatOpenAI
-from langchain.chains.combine_documents.stuff import create_stuff_documents_chain
-from langchain.chains.retrieval import create_retrieval_chain
 from lib.prompt import prompt
 from werkzeug.utils import secure_filename
 from pathlib import Path
@@ -61,27 +60,50 @@ if not os.path.exists(LOG_FILE):
 def whyme():
     data = request.get_json()
     job_desc = data.get("jobDescription")
-    print(f"Job Description: {job_desc}")
     if not job_desc:
         return jsonify({"error": "Missing job description"}), 400
 
-    store = get_resume_store()
-    retriever = store.as_retriever(search_kwargs={"k": 4})
-    llm = ChatOpenAI(model_name="gpt-4o-mini", temperature=0.3)
-    combine_chain = create_stuff_documents_chain(llm=llm, prompt=prompt)
-    chain = create_retrieval_chain(retriever=retriever, combine_docs_chain=combine_chain)
-    result = chain.invoke({"input": job_desc})["answer"]
+    @stream_with_context
+    def generate():
+        try:
+            # Phase 1 — retrieval
+            yield f"data: {json.dumps({'type':'phase','id':'retrieve','state':'active'})}\n\n"
+            store = get_resume_store()
+            retriever = store.as_retriever(search_kwargs={"k": 4})
+            docs = retriever.invoke(job_desc)
+            context_text = "\n\n".join(doc.page_content for doc in docs)
+            yield f"data: {json.dumps({'type':'phase','id':'retrieve','state':'done'})}\n\n"
 
-    print(f"Generated Result: {result}")
+            # Phase 2 — generation (streaming)
+            yield f"data: {json.dumps({'type':'phase','id':'generate','state':'active'})}\n\n"
+            llm = ChatOpenAI(model_name="gpt-4o-mini", temperature=0.3, streaming=True)
+            formatted = prompt.format(input=job_desc, context=context_text)
+            full_response = ""
+            for chunk in llm.stream(formatted):
+                token = chunk.content
+                if token:
+                    full_response += token
+                    yield f"data: {json.dumps({'type':'token','content':token})}\n\n"
 
-    with open(LOG_FILE, mode="a", newline="", encoding="utf-8") as f:
-        writer = csv.writer(f)
-        writer.writerow([
-            datetime.now(timezone.utc).isoformat(),
-            job_desc.replace("\n", " "),
-            result.replace("\n", " ")
-        ])
-    return jsonify({"result": result})
+            yield f"data: {json.dumps({'type':'phase','id':'generate','state':'done'})}\n\n"
+            yield f"data: {json.dumps({'type':'done'})}\n\n"
+
+            # Log after stream completes
+            with open(LOG_FILE, mode="a", newline="", encoding="utf-8") as f:
+                writer = csv.writer(f)
+                writer.writerow([
+                    datetime.now(timezone.utc).isoformat(),
+                    job_desc.replace("\n", " "),
+                    full_response.replace("\n", " "),
+                ])
+        except Exception as e:
+            yield f"data: {json.dumps({'type':'error','message':str(e)})}\n\n"
+
+    return Response(
+        generate(),
+        mimetype="text/event-stream",
+        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+    )
 
 @whyme_bp.route("/health", methods=["GET"])
 def health_check():
