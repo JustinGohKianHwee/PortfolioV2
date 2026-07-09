@@ -315,8 +315,7 @@ export default function Hero() {
           className="mt-16 pt-8 border-t border-white/[0.06]"
         >
           <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-8 sm:gap-10 lg:gap-16">
-            <StatCounter end={4.81} decimals={2} label="GPA / 5.0" />
-            <StatCounter end={4}    decimals={0}  label="Years Experience" suffix="+" />
+            <StatCounter end={4.79} decimals={2} label="GPA / 5.0" />
             <StatCounter end={5}    decimals={0}  label="Companies" />
             <div className="flex flex-col gap-1.5">
               <span className="text-white text-2xl font-semibold tracking-tight">
