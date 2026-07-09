@@ -10,9 +10,12 @@ const blurReveal = (delay = 0) => ({
   transition: { duration: 0.7, ease: EASE, delay },
 });
 
-const tiktok  = experiences.find((e) => e.id === "tiktok");
-const visenze = experiences.find((e) => e.id === "visenze");
-const compact = experiences.filter((e) => e.id !== "tiktok" && e.id !== "visenze");
+const tiktok      = experiences.find((e) => e.id === "tiktok");
+const tiktokIntern = experiences.find((e) => e.id === "tiktok-intern");
+const visenze     = experiences.find((e) => e.id === "visenze");
+const compact     = experiences.filter(
+  (e) => e.id !== "tiktok" && e.id !== "tiktok-intern" && e.id !== "visenze"
+);
 
 export default function Work() {
   return (
@@ -35,7 +38,7 @@ export default function Work() {
           </h2>
         </motion.div>
 
-        {/* TikTok — rotating glow border */}
+        {/* TikTok FT — rotating glow border */}
         {tiktok && (
           <motion.div {...blurReveal(0.08)} className="mb-5">
             <div className="glow-card p-8 lg:p-10">
@@ -44,9 +47,18 @@ export default function Work() {
           </motion.div>
         )}
 
+        {/* TikTok Intern — plain dark card */}
+        {tiktokIntern && (
+          <motion.div {...blurReveal(0.14)} className="mb-5">
+            <div className="card-base p-8 lg:p-10">
+              <FeaturedEntry exp={tiktokIntern} />
+            </div>
+          </motion.div>
+        )}
+
         {/* ViSenze — plain dark card */}
         {visenze && (
-          <motion.div {...blurReveal(0.14)} className="mb-10">
+          <motion.div {...blurReveal(0.20)} className="mb-10">
             <div className="card-base p-8 lg:p-10">
               <FeaturedEntry exp={visenze} />
             </div>
