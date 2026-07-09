@@ -3,13 +3,30 @@ export const experiences = [
     id: "tiktok",
     company: "TikTok · ByteDance",
     role: "Machine Learning Engineer",
-    period: "Jul 2025 – Present",
+    period: "Jul 2026 – Present",
     location: "Singapore",
     logo: "/assets/tiktok.svg",
     accent: "#E8A04D",
     current: true,
     summary:
-      "Working on the E-Commerce Foundation Recommendation platform — large-scale production ML systems serving millions of users.",
+      "Full-time ML Engineer on the E-Commerce Foundation Recommendation platform — large-scale production ML systems serving millions of users.",
+    bullets: [
+      "Continuing research and engineering on next-generation recommendation system foundation models and architectures",
+      "Building on prior internship work across Fine-Ranking and Foundation model pipelines at production scale",
+    ],
+    stack: ["PyTorch", "Transformer Architectures", "A/B Testing", "Recommendation Systems", "Foundation Models", "Large-Scale ML"],
+  },
+  {
+    id: "tiktok-intern",
+    company: "TikTok · ByteDance",
+    role: "Machine Learning Engineer Intern",
+    period: "Jul 2025 – Dec 2025",
+    location: "Singapore",
+    logo: "/assets/tiktok.svg",
+    accent: "#E8A04D",
+    current: false,
+    summary:
+      "Internship on the E-Commerce Foundation Recommendation platform — large-scale production ML systems serving millions of users.",
     bullets: [
       "Engineered and researched new attention architectures (Sparse-MoE, Grouped Query Attention) integrated into transformer-based recommendation models",
       "Conducted rigorous A/B experiments on key business metrics: CTR, CVR, and GMV across the e-commerce platform",
