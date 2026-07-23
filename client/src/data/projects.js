@@ -1,6 +1,54 @@
 export const projects = [
   // Tier 1 — Featured case studies
   {
+    id: "research-atlas",
+    tier: 1,
+    title: "Research Atlas",
+    subtitle: "AI-Assisted Research Reading Workspace",
+    tagline: "A reading workspace where the PDF is the surface — select a passage, ask about it, and get answers grounded in the paper's own text with cited pages, all preserved as a durable research record.",
+    context: "Personal Project",
+    problem:
+      "Most of a paper's value is in the thinking that happens while reading it — the questions it raises, the assumptions you challenge, the connections you draw — but that thinking usually gets lost, scattered across margins, chat windows, and half-finished notes.",
+    approach:
+      "A real pdf.js viewer with a selectable text layer sits at the centre of a three-pane reader (structured notes · PDF · assistant rail). Select text → highlight it, ask about it, or capture it as a note. Grounded Q&A answers only from the paper's own extracted page text using hybrid retrieval — lexical term overlap and semantic embeddings fused with Reciprocal Rank Fusion — citing the pages used and separating paper claims from interpretation. A staged, resumable ingestion pipeline extracts text, builds a passage breakdown, drafts notes into empty sections, and proposes topics/concepts for you to accept or reject.",
+    highlights: [
+      "PDF as a first-class workspace — persistent highlights stored as page fractions survive zoom and re-render",
+      "Grounded Q&A with provenance: hybrid lexical + semantic retrieval, cited pages, and a coverage verdict",
+      "Research Radar recommends what to read next, inferred from your own library",
+      "Formula OCR turns an equation screenshot into copy-ready KaTeX",
+      "SSRF-hardened fetcher and prompt-injection guarding for untrusted document text",
+    ],
+    stack: ["Next.js 16", "TypeScript", "Tailwind CSS v4", "Supabase (Postgres/RLS)", "OpenAI", "pdf.js / react-pdf", "KaTeX", "Postgres FTS", "Vitest", "Playwright"],
+    image: null,
+    github: "https://github.com/JustinGohKianHwee/paper_ra",
+    demo: null,
+    year: "2026",
+  },
+  {
+    id: "ai-pa",
+    tier: 1,
+    title: "AI Personal Assistant",
+    subtitle: "Review-First Life Operating System",
+    tagline: "A personal operating system that captures life data from a Telegram message, classifies and extracts it with an LLM, and routes it through a review inbox before anything becomes a permanent record — across tasks, finance, food, and calendar.",
+    context: "Personal Project · Live in production",
+    problem:
+      "Life data — tasks, expenses, meals, calendar intents — arrives constantly and unstructured, and gets lost before it can be organised or acted on. An assistant that auto-acts is untrustworthy; one that just stores raw text is useless.",
+    approach:
+      "Capture → classify/extract → pending inbox → review → confirm → domain record. A Telegram bot captures text, voice (Whisper transcription), and food photos (a vision model estimates calories and macros); OpenAI gpt-4o-mini classifies and extracts structured data into a pending inbox, and nothing becomes a permanent record until reviewed and confirmed through atomic Postgres RPCs. A FastAPI backend and Next.js dashboard run on Supabase Postgres behind ES256/JWKS single-owner auth and deny-by-default RLS. Read-only portfolio snapshots span Tiger and IBKR.",
+    highlights: [
+      "Deployed to production: Vercel frontend + Render FastAPI backend + Supabase Postgres (pa.justin-goh.dev)",
+      "Review-first pipeline — the assistant never writes a permanent record without explicit confirmation",
+      "Multimodal capture: text, voice transcription, and food-photo calorie/macro estimation",
+      "Single-owner auth (ES256/JWKS) with deny-by-default row-level security; service-role key stays server-side",
+      "376 backend tests passing across auth, capture, classification, and domain confirmation",
+    ],
+    stack: ["Next.js 15", "TypeScript", "FastAPI", "Python", "Supabase (Postgres/RLS)", "OpenAI (gpt-4o-mini + Whisper)", "Telegram Bot API", "Vercel", "Render"],
+    image: null,
+    github: "https://github.com/JustinGohKianHwee/ai_pa",
+    demo: "https://pa.justin-goh.dev",
+    year: "2026",
+  },
+  {
     id: "juriscontext",
     tier: 1,
     title: "JurisContext",
@@ -54,6 +102,30 @@ export const projects = [
   },
 
   // Tier 2 — Full project cards
+  {
+    id: "mle-bootcamp",
+    tier: 2,
+    title: "ML RecSys Bootcamp",
+    subtitle: "From-Scratch Transformers + Recommender Systems",
+    tagline: "A hands-on intensive implementing transformer and sequential-recommendation components from scratch in PyTorch — with a reproducible, slice-aware offline experiment workflow.",
+    context: "Personal Project",
+    problem:
+      "Deep recsys and ML-engineering fluency requires building the core components yourself and reasoning quantitatively about GPU cost — not just calling library APIs.",
+    approach:
+      "Manual-first implementation of attention (causal + padding masks), transformer blocks, two-tower retrieval, rankers, and BERT4Rec over synthetic e-commerce sequences. A config-driven runner writes per-run folders (config, metrics, slice metrics, eval report) for run-vs-run comparison. Metrics cover AUC/GAUC, NDCG/Recall@K, and calibration/ECE with slice-level backtest debugging, all targeting a single 16 GB consumer GPU.",
+    highlights: [
+      "Core transformer + sequence-recsys components implemented from scratch in PyTorch",
+      "Retrieval → ranking → re-ranking funnel with random vs. impression negative sampling",
+      "Reproducible config → run-folder → run-vs-run comparison experiment workflow",
+      "Slice-aware offline evaluation: AUC/GAUC, NDCG/Recall@K, calibration/ECE",
+      "302 tests passing; GPU tests skip gracefully without CUDA",
+    ],
+    stack: ["PyTorch", "Python", "NumPy", "CUDA / BF16", "pytest"],
+    image: null,
+    github: "https://github.com/JustinGohKianHwee/mle_bootcamp",
+    demo: null,
+    year: "2026",
+  },
   {
     id: "fake-news",
     tier: 2,
