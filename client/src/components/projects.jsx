@@ -42,6 +42,26 @@ function ProjectModal({ project: p }) {
               </div>
             )}
 
+            {p.images?.length > 0 && (
+              <div className="flex flex-col gap-3">
+                {p.images.map((img, i) => (
+                  <figure key={i} className="rounded-xl overflow-hidden border border-white/[0.08] bg-white/[0.02]">
+                    <img
+                      src={img.src}
+                      alt={img.caption || `${p.title} screenshot ${i + 1}`}
+                      loading="lazy"
+                      className="w-full h-auto block"
+                    />
+                    {img.caption && (
+                      <figcaption className="text-xs text-white/40 leading-relaxed px-3 py-2 border-t border-white/[0.06]">
+                        {img.caption}
+                      </figcaption>
+                    )}
+                  </figure>
+                ))}
+              </div>
+            )}
+
             <div>
               <p className="label-meta mb-2">Problem</p>
               <p className="text-sm text-white/55 leading-relaxed">{p.problem}</p>
